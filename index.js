@@ -1,6 +1,6 @@
 function insertRandomBackgroundImage() {
   const images = [];
-  const jpgCount = 42;
+  const jpgCount = 43;
   const gifCount = 1;
 
   for (let i = 1; i <= jpgCount; i++) {
