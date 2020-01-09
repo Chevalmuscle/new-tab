@@ -1,20 +1,21 @@
-function insertRandomBackgroundImage() {
-  const images = [];
-  const jpgCount = 43;
-  const gifCount = 1;
+const LOCAL_IMAGE_COUNT = 10; // hardcoded
 
-  for (let i = 1; i <= jpgCount; i++) {
-    images.push(`image${i}.jpg`);
-  }
-  for (let i = 1; i <= gifCount; i++) {
-    images.push(`image${i}.gif`);
-  }
+function getLocalImage() {
+  const imageIndex = getRandomInt(1, LOCAL_IMAGE_COUNT);
+  return `local-images/image${imageIndex}.jpg`;
+}
+
+function getRemoteImage() {
+  return "https://source.unsplash.com/random";
+}
+
+function insertRandomBackgroundImage() {
+  const oddsOfLocalImage = 0.1;
+  const imageUrl =
+    Math.random() < oddsOfLocalImage ? getLocalImage() : getRemoteImage();
 
   $("html").css({
-    background:
-      "url(images/" +
-      images[Math.floor(Math.random() * images.length)] +
-      ") no-repeat center center fixed",
+    background: `url(${imageUrl}) no-repeat center center fixed`,
     "-webkit-background-size": "cover",
     "-moz-background-size": "cover",
     "-o-background-size": "cover",
@@ -34,7 +35,9 @@ function insertRandomExpression() {
   $.get(`https://www.laparlure.com/p/${randomLaParlurePage}/`, function(data) {
     const expressionsElements = $(".entry__item", data);
     const expressionIndex = getRandomInt(0, expressionsElements.length - 1);
-    const expressionElement = $(expressionsElements[expressionIndex]).children();
+    const expressionElement = $(
+      expressionsElements[expressionIndex],
+    ).children();
 
     const expression = expressionElement[0].innerText.trim();
     const definition = $(".entry__definition__text", expressionElement)[0]
