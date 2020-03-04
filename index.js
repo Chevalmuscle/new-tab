@@ -50,21 +50,37 @@ function insertRandomExpression() {
   });
 }
 
-function insertRandomQuote() {
-  $.get(
-    "https://programming-quotes-api.herokuapp.com/quotes/random/lang/en",
-    function(data) {
-      const quote = data.en;
-      const author = data.author;
+const quoteApis = [
+  {
+    url: "http://quotes.stormconsultancy.co.uk/random.json",
+    quoteProperty: "quote",
+    authorProperty: "author",
+  },
+  {
+    url: "https://programming-quotes-api.herokuapp.com/quotes/random/lang/en",
+    quoteProperty: "en",
+    authorProperty: "author",
+  },
+];
 
-      $(".quote-text")[0].innerText = quote;
-      $(".quote-author")[0].innerText = author;
-    },
-  );
+function fetchQuote({ url, quoteProperty, authorProperty }, callback) {
+  $.get(url, function(data) {
+    callback({ quote: data[quoteProperty], author: data[authorProperty] });
+  });
+}
+
+function generateRandomQuote() {
+  const randomQuoteApi = getRandomInt(0, 1);
+  fetchQuote(quoteApis[randomQuoteApi], insertQuote);
+}
+
+function insertQuote({ quote, author }) {
+  $(".quote-text")[0].innerText = quote;
+  $(".quote-author")[0].innerText = author;
 }
 
 $(document).ready(function() {
   insertRandomBackgroundImage();
   insertRandomExpression();
-  insertRandomQuote();
+  generateRandomQuote();
 });
