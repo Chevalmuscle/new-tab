@@ -50,7 +50,21 @@ function insertRandomExpression() {
   });
 }
 
+function insertRandomQuote() {
+  $.get(
+    "https://programming-quotes-api.herokuapp.com/quotes/random/lang/en",
+    function(data) {
+      const quote = data.en;
+      const author = data.author;
+
+      $(".quote-text")[0].innerText = quote;
+      $(".quote-author")[0].innerText = author;
+    },
+  );
+}
+
 $(document).ready(function() {
   insertRandomBackgroundImage();
   insertRandomExpression();
+  insertRandomQuote();
 });
