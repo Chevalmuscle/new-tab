@@ -1,4 +1,6 @@
-const LOCAL_IMAGE_COUNT = 10; // hardcoded
+const LOCAL_IMAGE_COUNT = 0; // hardcoded
+
+const SPACEX_API = "https://api.spacexdata.com/v3";
 
 function getLocalImage() {
   const imageIndex = getRandomInt(1, LOCAL_IMAGE_COUNT);
@@ -74,6 +76,22 @@ function generateRandomQuote() {
   fetchQuote(quoteApis[randomQuoteApi], insertQuote);
 }
 
+function insertNextSpaceXLaunch() {
+  $.get(`${SPACEX_API}/launches/next`, function(data) {
+    const dateFormat = new Intl.DateTimeFormat("fr", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    $("#mission").text(`${data.rocket.rocket_name} - ${data.mission_name}`);
+    $("#mission").attr("href", data.links.video_link);
+    $("#launch-date").text(dateFormat.format(new Date(data.launch_date_utc)));
+  });
+}
+
 function insertQuote({ quote, author }) {
   $(".quote-text")[0].innerText = quote;
   $(".quote-author")[0].innerText = author;
@@ -83,4 +101,5 @@ $(document).ready(function() {
   insertRandomBackgroundImage();
   insertRandomExpression();
   generateRandomQuote();
+  insertNextSpaceXLaunch();
 });
